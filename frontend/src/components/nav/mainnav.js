@@ -1,7 +1,23 @@
+import styled from 'styled-components';
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 
-export default function NavList() {
+const StyledNav = styled.nav`
+  display: inline-grid;
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  ul li {
+    float: left;
+    padding: 15px 20px;
+    margin-right: 10px;
+    background: grey;
+  }
+`;
+
+export function MainNav({links}) {
   // This styling will be applied to a <NavLink> when the
   // route that it links to is currently selected.
   let activeStyle = {
@@ -10,83 +26,26 @@ export default function NavList() {
 
   let activeClassName = "underline"
 
+  let items = links.map((link) => {
+  })
+
   return (
-    <nav>
+    <StyledNav>
       <ul>
-        <li>
+        {links.map(link =>
+
+        <li key={link.to}>
           <NavLink
-            to="/"
+            key={link.to}
+            to={link.to}
             style={({ isActive }) =>
-              isActive ? activeStyle : undefined
-            }
-          >
-           Home 
+              isActive ? activeStyle : undefined}
+n         >
+           {link.name} 
           </NavLink>
         </li>
-        <li>
-          <NavLink
-            to="/scalability"
-            style={({ isActive }) =>
-              isActive ? activeStyle : undefined
-            }
-          >
-           Scalability 
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="costs"
-            className={({ isActive }) =>
-              isActive ? activeClassName : undefined
-            }
-          >
-            Cost Optimization
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="machinelearning"
-            className={({ isActive }) =>
-              isActive ? activeClassName : undefined
-            }
-          >
-            Smart Automation with AI 
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="security"
-          >
-            {({ isActive }) => (
-              <span className={isActive ? activeClassName : undefined}>
-                Security 
-              </span>
-            )}
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="data"
-          >
-            {({ isActive }) => (
-              <span className={isActive ? activeClassName : undefined}>
-                Data 
-              </span>
-            )}
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="web3dotO"
-          >
-            {({ isActive }) => (
-              <span className={isActive ? activeClassName : undefined}>
-                Web 3.0 
-              </span>
-            )}
-          </NavLink>
-        </li>
+        )}
       </ul>
-    </nav>
+    </StyledNav>
   );
 }

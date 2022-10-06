@@ -1,16 +1,46 @@
+import styled from 'styled-components';
 import {Section} from '../section';
 
+
+const StyledWrapper = styled.div`
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-areas:
+  "header"
+  "content"
+  "links";
+
+  .header {
+    grid-area: header;
+    border: 1px dashed red;
+  }
+
+  .content {
+    grid-area: content;
+  }
+
+  .links {
+    grid-area: links;
+  }
+
+`;
+
 export function SectionOverview(props) {
-	const {sections} = props
-	let sectionList = sections.map(section => 
-	<li>{section.title}</li>);
+	const {title, subtitle, sections} = props;
 
 	return (
-	<div>
-	<h1>Learn to scale your startup</h1>
-	{sections.map( section => 
-	<Section section={section}/>)
-	}
-	</div>
+	<StyledWrapper>
+    <div class="header">
+      <h1>{title}</h1>
+      <h2>{subtitle}</h2>
+    </div>
+    <div class="content">
+      {sections.map( section => 
+      <Section section={section}/>)
+      }
+    </div>
+    <div class="links">
+    </div>
+	</StyledWrapper>
 	)
 }

@@ -17,5 +17,3 @@ This project is maintained primarily as a reference for learning and will always
 I strongly welcome any kind of productive feedback through PRs or issues if you feel content is not complete, can be improved upon or is straight out based on my wrong understanding of a complex matter. 
 
 Feel free to contact me at any time if you want to request further features to be added, or just pick it up and add them yourself right now.
-
-

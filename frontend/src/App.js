@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
-
 import React from 'react';
+import {MainNav} from './components/nav';
+
 import {
+  AdminIndex,
+  AdminLanding,
+  Articles,
+  ArticleDetail,
+  ArticleList,
+  CategoryList,
+  VideoList
+} from './components/routes';
+import {
+
+  PublicLanding,
+} from './components/routes/public/landing.jsx';
+import {
+  BrowserRouter,
   Routes,
   Route,
   Link
 } from 'react-router-dom';
-import NavList from './components/nav/mainnav.js'; 
-import {LandingPageScalability, LandingPageCostOptimization, LandingPageMachineLearning, LandingPageSecurity, LandingPageWeb3dot0, LandingPage}  from './components/routes/';
+import NavList from './components/nav';
+
+const links = [
+ {to:"/",  name:"Home"},
+ {to:"/articles",  name:"Articles"},
+ {to:"/videos",  name:"Videos"},
+ {to:"/projects",  name:"Projects"},
+]
+
 
 export default function App() {
   return (
-	<Routes>
-<Route exact path="/" element={<LandingPage/>}> </Route> 
-<Route path="/scalability" element={<LandingPageScalability />}> </Route> 
-<Route path="/costs" element={<LandingPageCostOptimization />}> </Route> 
-<Route path="/machinelearning" element={<LandingPageMachineLearning />}> </Route> 
-<Route path="/security" element={<LandingPageSecurity />}> </Route> 
-<Route path="/web3dot0" element={<LandingPageWeb3dot0 />}> </Route> 
-</Routes>
+    <BrowserRouter>
+      <div class="header">
+        <MainNav links={links}/>
+      </div>      
+    <div class="content">
+     <Routes>
+        <Route path="/" element={<PublicLanding/>}/>
+        <Route path="/articles" element={<Articles/>}>
+          <Route index element={<ArticleList />} />
+          <Route path=":articleId" element={<ArticleDetail />}>
+            <Route path="discuss" element={<ArticleList />} />
+          </Route>
+    </Route>
+      </Routes>
+    </div>
+  </BrowserRouter>
 )
 }
