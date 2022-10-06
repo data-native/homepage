@@ -5,14 +5,14 @@ import boto3
 from boto3.dynamodb.conditions import Key
 
 def getByIdHandler(event, context):
-    articleId = event["pathParameters"]["id"]
+    videoId = event["pathParameters"]["id"]
     dynamodb = boto3.resource('dynamodb', endpoint_url="http://docker.for.mac.host.internal:8000")
     tablename = os.environ['SAMPLE_TABLE']
     table = dynamodb.Table(tablename)
     try:
 
         response = table.query(
-            KeyConditionExpression=Key('ArticleId').eq(articleId)
+            KeyConditionExpression=Key('VideoId').eq(videoId)
         ) 
 
         return {
