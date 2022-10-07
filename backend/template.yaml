@@ -26,7 +26,7 @@ Resources:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
 # This is a Lambda function config associated with the source code: get-all-items.js
-  getAllArticlesFunction:
+  getAllContentFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/articles/get-all-items.getAllItemsHandler
@@ -39,11 +39,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref Persons
+            TableName: !Ref Content
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref Persons
+          SAMPLE_TABLE: !Ref Content
       Events:
         Api:
           Type: Api
@@ -67,11 +67,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref Persons
+            TableName: !Ref Content
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref Persons
+          SAMPLE_TABLE: !Ref Content
       Events:
         Api:
           Type: Api
@@ -95,11 +95,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref Persons
+            TableName: !Ref Content
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref Persons
+          SAMPLE_TABLE: !Ref Content
       Events:
         Api:
           Type: Api
@@ -108,7 +108,7 @@ Resources:
             Method: POST
   # Simple syntax to create a DynamoDB table with a single attribute primary key, more in
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable
-getAllVideosFunction:
+  getAllVideosFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/videos/get-all-items.getAllItemsHandler
@@ -121,11 +121,11 @@ getAllVideosFunction:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref Persons
+            TableName: !Ref Content
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref Persons
+          SAMPLE_TABLE: !Ref Content
       Events:
         Api:
           Type: Api
@@ -149,11 +149,11 @@ getAllVideosFunction:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref Persons
+            TableName: !Ref Content
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref Persons
+          SAMPLE_TABLE: !Ref Content
       Events:
         Api:
           Type: Api
@@ -177,11 +177,11 @@ getAllVideosFunction:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref Persons
+            TableName: !Ref Content
       Environment:
         Variables:
           # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref Persons
+          SAMPLE_TABLE: !Ref Content
       Events:
         Api:
           Type: Api
@@ -190,16 +190,25 @@ getAllVideosFunction:
             Method: POST
   # Simple s
   # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
-  Persons:
+  Content:
     Type: AWS::Serverless::SimpleTable
     Properties:
       PrimaryKey:
-        Name: PersonKey
+        Name: ArticleId
         Type: String
       ProvisionedThroughput:
         ReadCapacityUnits: 2
         WriteCapacityUnits: 2
 
+  Content:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: Type
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
 Outputs:
   WebEndpoint:
     Description: "API Gateway endpoint URL for Prod stage"
