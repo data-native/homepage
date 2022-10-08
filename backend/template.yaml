@@ -26,10 +26,56 @@ Resources:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
 # This is a Lambda function config associated with the source code: get-all-items.js
-  getAllContentFunction:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+    DefinitionBody:
+      'Fn::Transform':
+        Name: 'AWS::Include'
+        Parameters:
+          Location: ./swagger.yaml
+
+# Handling options preflight for CORS
+  OptionHandler:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/articles/get-all-items.getAllItemsHandler
+      Handler: src/handlers/options/handler.optionsHandler
+      Runtime: python3.7
+      FunctionName: !Sub "${paramEnvironment}${paramFeatureBranch}_${paramServiceName}_corsOptions"
+      Architectures:
+        - x86_64
+      Timeout: 30
+      Events:
+        getAllArticlesAPIOptions:
+          Type: Api
+          Properties:
+            Path: /article
+            Method: OPTIONS
+            RestApiId: !Ref ApiGatewayApi
+        getArticleByIdAPIOptions:
+          Type: Api
+          Properties:
+            Path: /article/{id}
+            Method: OPTIONS
+            RestApiId: !Ref ApiGatewayApi
+        getAllVideosAPIOptions:
+          Type: Api
+          Properties:
+            Path: /video
+            Method: OPTIONS
+            RestApiId: !Ref ApiGatewayApi
+        getVideoByIdAPIOptions:
+          Type: Api
+          Properties:
+            Path: /video/{id}
+            Method: OPTIONS
+            RestApiId: !Ref ApiGatewayApi
+# Retrieves all articles
+  getAllArticlesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/article/get-all-items/handler.getAllItemsHandler
       Runtime: python3.7 
       Architectures:
         - x86_64
@@ -48,7 +94,8 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /
+            RestApiId: !Ref ApiGatewayApi
+            Path: /article
             Method: GET
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -57,7 +104,7 @@ Resources:
   getArticleByIdFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/articles/get-by-id.getByIdHandler
+      Handler: src/handlers/article/get-by-id/handller.getByIdHandler
       Runtime: python3.7 
       Architectures:
         - x86_64
@@ -76,7 +123,8 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /{id}
+            RestApiId: !Ref ApiGatewayApi
+            Path: /article/{id}
             Method: GET
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -85,7 +133,7 @@ Resources:
   putArticleFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/articles/put-item.putItemHandler
+      Handler: src/handlers/article/put-item/handler.putItemHandler
       Runtime: python3.7 
       Architectures:
         - x86_64
@@ -104,20 +152,21 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /
+            RestApiId: !Ref ApiGatewayApi
+            Path: /article
             Method: POST
   # Simple syntax to create a DynamoDB table with a single attribute primary key, more in
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable
   getAllVideosFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/videos/get-all-items.getAllItemsHandler
+      Handler: src/handlers/video/get-all-items/handler.getAllItemsHandler
       Runtime: python3.7 
       Architectures:
         - x86_64
       MemorySize: 128
       Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from a DynamoDB table.
+      Description: A simple example includes a HTTP version '3.8'
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
@@ -130,16 +179,17 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /
+            RestApiId: !Ref ApiGatewayApi
+            Path: /video
             Method: GET
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
   # This is a Lambda function config associated with the source code: get-by-id.js
-  getArticleByIdFunction:
+  getVideoByIdFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/videos/get-by-id.getByIdHandler
+      Handler: src/handlers/video/get-by-id.getByIdHandler
       Runtime: python3.7 
       Architectures:
         - x86_64
@@ -158,7 +208,8 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /{id}
+            RestApiId: !Ref ApiGatewayApi
+            Path: /video/{id}
             Method: GET
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -186,7 +237,8 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /
+            RestApiId: !Ref ApiGatewayApi
+            Path: /video
             Method: POST
   # Simple s
   # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}

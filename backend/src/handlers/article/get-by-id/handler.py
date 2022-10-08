@@ -24,6 +24,9 @@ def getByIdHandler(event, context):
 
         response_data =  {
             'statusCode': 400,
+             'headers': {
+                "Access-Control-Allow-Origin":"'*'",
+                },
             'error': str(e) 
             }
     return response_data

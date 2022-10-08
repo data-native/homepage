@@ -9,7 +9,9 @@ def putItemHandler(event, context):
     if ('body' not in event or event['httpMethod'] != 'POST'):
         return {
             'statusCode': 400,
-            'headers': {},
+            'headers': {
+                "Access-Control-Allow-Origin": "*"
+            },
             'body': json.dumps({'msg': 'Bad request'})
         }
 
@@ -18,13 +20,14 @@ def putItemHandler(event, context):
     article = json.loads(event['body'])
 
     params = {
-        'PersonKey': str(uuid.uuid4()),
-        'createdAt': str(datetime.timestamp(datetime.now())),
-        'status': article['status'],
-        'title': article['title'],
-        'subtitle': article['subtitle'],
-        'tags': article['tags'],
-        'content': article['content'],
+        'PK': 'Article',
+        'SK': str(uuid.uuid4()),
+        'CreatedAt': str(datetime.timestamp(datetime.now())),
+        'Status': article['status'],
+        'Title': article['title'],
+        'Subtitle': article['subtitle'],
+        'Tags': article['tags'],
+        'Content': article['content'],
     }
 
     table = article_table.Table(table_name)
@@ -34,7 +37,6 @@ def putItemHandler(event, context):
     ) 
 
     return {
-        'statusCode': 200,
         'body': json.dumps({'msg': 'Entry created '})
         }
 

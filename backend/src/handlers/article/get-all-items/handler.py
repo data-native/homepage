@@ -14,12 +14,17 @@ def getAllItemsHandler(event, context):
         table = table.Table(table_name)
         response = table.scan()
         items = response['Items']
+
         return {
             'statusCode': 200,
-            'body': {
+            'headers': {
+                  "Access-Control-Allow-Origin" : "*", 
+                  "Access-Control-Allow-Headers" : "*", 
+            },
+            'body': json.dumps({
                 'table': table_name,
                 'items': items
-                } 
+                               }) 
             }
 
     except Exception as e:
