@@ -18,7 +18,8 @@ paths:
                   default:
                     statusCode: 200
                     responseParameters:
-                      method.response.header.Access-Control-Allow-Origin: "'*'"
+
+method.response.header.Access-Control-Allow-Origin: "'*'"
                 passthroughBehavior: when_no_match
                 httpMethod: POST
                 type: aws_proxy
@@ -59,4 +60,4 @@ paths:
 definitions:
   Empty:
     type: object
-    title: Empty Schema
+    title: Empty Schemjlkjla  

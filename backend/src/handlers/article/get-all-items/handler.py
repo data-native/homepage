@@ -9,7 +9,6 @@ def getAllItemsHandler(event, context):
         
         table = boto3.resource(
             'dynamodb',
-            endpoint_url='http://docker.for.mac.host.internal:8000'
         )
         table = table.Table(table_name)
         response = table.scan()
@@ -18,8 +17,7 @@ def getAllItemsHandler(event, context):
         return {
             'statusCode': 200,
             'headers': {
-                  "Access-Control-Allow-Origin" : "*", 
-                  "Access-Control-Allow-Headers" : "*", 
+                  "Access-Control-Allow-Origin" : "'*'", 
             },
             'body': json.dumps({
                 'table': table_name,

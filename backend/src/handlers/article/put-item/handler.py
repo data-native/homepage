@@ -10,13 +10,13 @@ def putItemHandler(event, context):
         return {
             'statusCode': 400,
             'headers': {
-                "Access-Control-Allow-Origin": "*"
+                "Access-Control-Allow-Origin": "'*'"
             },
             'body': json.dumps({'msg': 'Bad request'})
         }
 
     table_name = os.environ.get('SAMPLE_TABLE')
-    article_table = boto3.resource('dynamodb', endpoint_url="http://docker.for.mac.host.internal:8000")
+    article_table = boto3.resource('dynamodb')
     article = json.loads(event['body'])
 
     params = {

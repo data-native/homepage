@@ -2,3 +2,4 @@ node_modules
 .venv
 .aws-sam
 *.egg-info
+

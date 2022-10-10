@@ -30,11 +30,11 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-    DefinitionBody:
-      'Fn::Transform':
-        Name: 'AWS::Include'
-        Parameters:
-          Location: ./swagger.yaml
+      Cors:
+        AllowMethods: "'POST, GET, PUT, DELETE, OPTIONS'"
+        AllowHeaders: "'X-Forwarded-For'"
+        AllowOrigin: "'*'"
+        MaxAge: "'600'"
 
 # Handling options preflight for CORS
   OptionHandler:
@@ -42,7 +42,7 @@ Resources:
     Properties:
       Handler: src/handlers/options/handler.optionsHandler
       Runtime: python3.7
-      FunctionName: !Sub "${paramEnvironment}${paramFeatureBranch}_${paramServiceName}_corsOptions"
+      FunctionName: !Sub "cors_options"
       Architectures:
         - x86_64
       Timeout: 30
@@ -243,25 +243,15 @@ Resources:
   # Simple s
   # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
   Content:
-    Type: AWS::Serverless::SimpleTable
+    Type: AWS::DynamoDB::Table
     Properties:
-      PrimaryKey:
-        Name: ArticleId
-        Type: String
-      ProvisionedThroughput:
-        ReadCapacityUnits: 2
-        WriteCapacityUnits: 2
+      TableName: Content
+      AttributeDefinition:
+        - AttributeName: PK
+          AttributeType: S
+        
 
-  Content:
-    Type: AWS::Serverless::SimpleTable
-    Properties:
-      PrimaryKey:
-        Name: Type
-        Type: String
-      ProvisionedThroughput:
-        ReadCapacityUnits: 2
-        WriteCapacityUnits: 2
 Outputs:
   WebEndpoint:
     Description: "API Gateway endpoint URL for Prod stage"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

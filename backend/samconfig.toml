@@ -3,9 +3,9 @@ version = 0.1
 [default.deploy]
 [default.deploy.parameters]
 stack_name = "datanative"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-m7qzku3nybi3"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-oz5zbjdqq63x"
 s3_prefix = "datanative"
-region = "eu-central-1"
+region = "ap-southeast-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 image_repositories = []

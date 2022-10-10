@@ -6,7 +6,7 @@ from boto3.dynamodb.conditions import Key
 
 def getByIdHandler(event, context):
     articleId = event["pathParameters"]["id"]
-    dynamodb = boto3.resource('dynamodb', endpoint_url="http://docker.for.mac.host.internal:8000")
+    dynamodb = boto3.resource('dynamodb')
     tablename = os.environ['SAMPLE_TABLE']
     table = dynamodb.Table(tablename)
     try:
@@ -17,6 +17,9 @@ def getByIdHandler(event, context):
 
         return {
             'statusCode': 200,
+             'headers': {
+                "Access-Control-Allow-Origin":"'*'",
+                },
             'body': json.dumps(response['Item'] )
             }
 

@@ -47,7 +47,7 @@ export class Articles extends React.Component {
   getAllArticles() {
     axios({
       method: 'get',
-      url: "http://localhost:5000/",
+     url: "https://385cjwy2bg.execute-api.ap-southeast-1.amazonaws.com/Prod/article"
     }).then(response => {
       console.log(response.data)
       this.state.articles = response.data
