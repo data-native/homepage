@@ -5,7 +5,7 @@ const StyledWrapper = styled.div`
 
 `;
 
-export function ArticleList() {
+export function AdminArticleList() {
   return (
     <StyledWrapper>
       <div class="header">

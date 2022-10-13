@@ -37,40 +37,6 @@ Resources:
         MaxAge: "'600'"
 
 # Handling options preflight for CORS
-  OptionHandler:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/options/handler.optionsHandler
-      Runtime: python3.7
-      FunctionName: !Sub "cors_options"
-      Architectures:
-        - x86_64
-      Timeout: 30
-      Events:
-        getAllArticlesAPIOptions:
-          Type: Api
-          Properties:
-            Path: /article
-            Method: OPTIONS
-            RestApiId: !Ref ApiGatewayApi
-        getArticleByIdAPIOptions:
-          Type: Api
-          Properties:
-            Path: /article/{id}
-            Method: OPTIONS
-            RestApiId: !Ref ApiGatewayApi
-        getAllVideosAPIOptions:
-          Type: Api
-          Properties:
-            Path: /video
-            Method: OPTIONS
-            RestApiId: !Ref ApiGatewayApi
-        getVideoByIdAPIOptions:
-          Type: Api
-          Properties:
-            Path: /video/{id}
-            Method: OPTIONS
-            RestApiId: !Ref ApiGatewayApi
 # Retrieves all articles
   getAllArticlesFunction:
     Type: AWS::Serverless::Function
@@ -90,6 +56,7 @@ Resources:
         Variables:
           # Make table name accessible as environment variable from function code during execution
           SAMPLE_TABLE: !Ref Content
+          BACKEND_URL: 
       Events:
         Api:
           Type: Api

@@ -11,6 +11,7 @@ const StyledWrapper = styled.div`
 
   div {
     margin: 10px;
+    color: lightgrey;
   }
 
   .sections {

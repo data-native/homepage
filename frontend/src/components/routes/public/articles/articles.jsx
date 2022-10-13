@@ -3,6 +3,8 @@ import axios from 'axios';
 import {Outlet} from 'react-router-dom';
 import styled from 'styled-components';
 
+
+
 const StyledWrapper = styled.div`
   display: grid;
   grid-template-columns: 15% 85%;
@@ -45,12 +47,14 @@ export class Articles extends React.Component {
   };
   //Api methods
   getAllArticles() {
+    console.log("Started getting all articles")
+    console.log(process.env.REACT_APP_BACKEND_URL)
     axios({
       method: 'get',
-     url: "https://385cjwy2bg.execute-api.ap-southeast-1.amazonaws.com/Prod/article"
+     url: process.env.REACT_APP_BACKEND_URL + "/article" 
     }).then(response => {
       console.log(response.data)
-      this.state.articles = response.data
+      this.state.articles = response.data.items
     })
   }
 
@@ -95,7 +99,7 @@ export class Articles extends React.Component {
           </ul>
         </div>
         <div class="content">
-          <Outlet />
+          <Outlet context={this.state}/>
         </div>
       </StyledWrapper>
     ) 
