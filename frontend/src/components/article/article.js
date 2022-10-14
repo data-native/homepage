@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import {useLocation} from 'react-router';
+
 const StyledWrapper = styled.div`
   display: grid;
   grid-template-columns: 40% 50%;
@@ -22,22 +24,24 @@ const StyledWrapper = styled.div`
   }
 `;
 
-
-
 export function ArticleRow({article}) {
-return (
-  <StyledWrapper>
-    <div class="header">
-      <h1>{article.Title}</h1>
-      <h2>{article.Subtitle}</h2>
-    </div>
-    <div class="content">
-      <p>{article.Content}</p>
-    </div>
-    <div class="bar">
-      Tags
-    </div>
-	</StyledWrapper>
-);
+ const location = useLocation()
+
+  return (
+    <StyledWrapper>
+      <a href={location.pathname + "/" + article.SK}>
+        <div class="header">
+          <h1>{article.Title}</h1>
+          <h2>{article.Subtitle}</h2>
+        </div>
+        <div class="content">
+          <p>{article.Content}</p>
+        </div>
+        <div class="bar">
+          Tags
+        </div>
+      </a>
+    </StyledWrapper>
+  );
 }
 

@@ -11,14 +11,14 @@ def getByIdHandler(event, context):
     table = dynamodb.Table(tablename)
     try:
 
-        response = table.query(
-            KeyConditionExpression=Key('ArticleId').eq(articleId)
+        response = table.get_item(
+                Key = {'PK': 'Article', 'SK': articleId}
         ) 
 
         return {
             'statusCode': 200,
              'headers': {
-                "Access-Control-Allow-Origin":"'*'",
+                "Access-Control-Allow-Origin":"*",
                 },
             'body': json.dumps(response['Item'] )
             }
