@@ -3,11 +3,13 @@ import styled from 'styled-components';
 
 const StyledWrapper = styled.div`
   display: grid;
-  display-template-columns: 20% 80%;
+  grid-template-columns: 40% 50%;
+  grid-template-rows: 10% 90%;
   grid-template-areas:
   "bar bar"
   "header content";
   border: 1px dashed grey;
+  background-color: white;
   
   .header {
     grid-area: header;
@@ -32,8 +34,8 @@ return (
     <div class="content">
       <p>{article.Content}</p>
     </div>
-    <div class="footer">
-      Footer
+    <div class="bar">
+      Tags
     </div>
 	</StyledWrapper>
 );

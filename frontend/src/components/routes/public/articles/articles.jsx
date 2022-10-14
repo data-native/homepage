@@ -4,7 +4,6 @@ import {Outlet} from 'react-router-dom';
 import styled from 'styled-components';
 
 
-
 const StyledWrapper = styled.div`
   display: grid;
   grid-template-columns: 15% 85%;
@@ -28,43 +27,72 @@ const StyledWrapper = styled.div`
   }
 `;
 
-const categories = [
-  {name: "Test"}
-]
+function filterPinned(article) {
+  return article.Pinned === 1
+};
+
+
 export class Articles extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       articles: [],
+      filtered: [],
+      pinned:[],
       categories: [],
       selected: '',
       //array of article recommendations (id, name)
       recommendations: [{title:"First"}],
       //List of articleIds
       recommendedIds: [],
+      filterText: "",
+      handleFilter: this.handleArticleFilter,
     }
   };
   //Api methods
   getAllArticles() {
-    console.log("Started getting all articles")
-    console.log(process.env.REACT_APP_BACKEND_URL)
+    console.log(process.env)
+    //Get the articles
     axios({
       method: 'get',
      url: process.env.REACT_APP_BACKEND_URL + "/article" 
     }).then(response => {
       console.log(response.data)
-      this.state.articles = response.data.items
-    })
+
+      this.setState({
+        articles: response.data.items,
+        filtered: response.data.items,
+        pinned: response.data.items.filter(filterPinned),
+        categories: response.data.items.map((a) => a.Tags)
+      });
+    });
   }
+  
+  handleArticleFilter = (e) => {
+      //
+      if (e.target.value == "" ){
+        this.setState({
+          filtered: this.state.articles
+        })
+      } else {
+        console.log(e.target.value)
+        let articles_filtered = this.state.articles.filter((art) => {
+          if (e.input === '') {
+            return true; 
+          } else {
+            return art.Title.toLowerCase().includes(e.target.value)
+          }
+        })
+        this.setState({
+          filtered: articles_filtered
+        })
+      }
+   };
 
   getArticleById() {
 
   }
-
-
-
-
   //Lifecyle 
   componentDidMount() {
     this.getAllArticles()
@@ -72,7 +100,7 @@ export class Articles extends React.Component {
   
   //Selects an article
   select(e) {
-    this.state.selected = e.articleId
+
   }
 
 
@@ -84,9 +112,6 @@ export class Articles extends React.Component {
           <h1>Articles</h1>
           <p>Recommended content</p>
           <ul>
-          {this.state.recommendations.map( (rec) => 
-            <li>{rec.title}</li>
-          )}
           </ul>
         </div>
         <div class="sidebar">
@@ -94,7 +119,7 @@ export class Articles extends React.Component {
           <h2>Categories</h2>
           <ul>
           {this.state.categories.map( (cat) => 
-            <li>{cat.name}</li>
+            <li>{cat}</li>
           )}
           </ul>
         </div>
