@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  backend
+
+# Transform section specifies one or more macros that AWS CloudFormation uses to process your template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
+Transform: AWS::Serverless-2016-10-31
+Globals:
+# Resources declares the AWS resources that you want to include in the stack
+  Function:
+    Properties:
+      Runtime: python3.7 
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+    Parameters:
+      BASE_URL: !FindInMap [APIIntegrationBaseUrl, finnhub]
+    Environment:
+      Variables:
+        # Make table name accessible as environment variable from function code during execution
+        FINNHUB_API_KEY: !Ref FinnhubAPIKey
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Resources:
+  lookupSymbolByName:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/api/finnhub/lookupSymbol/handler.lookupSymbolByName
+      Description: Resolves a name to a ticker symbol
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: !Sub ${BASE_URL}/stock/search
+            Method: GET
+
+  getStocksByExchange:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/api/finnhub/getStocksByExchange/handler.getStocksByExchannge
+      Description: Retrieves an optionally filtered list of stocks 
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: !Sub ${BASE_URL}/stock/symbol
+            Method: GET
+
+  getMarketNews:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/api/finnhub/getMarketNews/handler.getMarketNews
+      Description: Gets historical news on a given market 
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: !Sub ${BASE_URL}/news/market
+            Method: GET
+
+  getCompanyNews:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/api/finnhub/getCompanyNews/handler.getCompanyNews
+      Description: Gets historical news on a given company
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: !Sub ${BASE_URL}/news/company
+            Method: GET
+
+  getStockMetrics:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/api/finnhub/getStockMetrics/handler.getStockMetrics
+      Description: Retrieves an optionally filtered list of stocks 
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: !Sub ${BASE_URL}/stock/metric
+            Method: GET

@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  API integration with Yahoo finance API
+
+# Transform section specifies one or more macros that AWS CloudFormation uses to process your template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Properties:
+      Runtime: python3.7
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+    Parameters:
+      BASE_URL: !FindInMap [APIIntegrationBaseUrl, finnhub]
+      ENDPOINT_URL: "https://query1.finance.yahoo.com/"
+    Environment:
+      Variables:
+        YAHOO_API_KEY: "Not required but placed here for future use"
+  
+# Resources declares the AWS resources that you want to include in the stack
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Resources:
+  # Each Lambda function is defined by properties:
+  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+
+  getStockMetrics:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/api/yahoo/getStockMetrics/handler.getStockMetrics
+      Description: Retrieve stock specific data
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: !Sub ${BASE_URL}/stock/
+            Method: GET
+      Environment:
+        Variables:
+          ENDPOINT: "/v8/finance/chart/{symbol}?{query_params}"
+
+  getHistoricalPricesPerStock:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/api/yahoo/getStockData/handler.getStockData
+      Description: Retrieve stock specific data
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: !Sub ${BASE_URL}/stock/search
+            Method: GET
+
+  getFinanceQuote:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/api/yahoo/getStockData/handler.getStockData
+      Description: Queries multiple stocks at once for side-by-side comparison
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: !Sub ${BASE_URL}/stock/search
+            Method: GET
+
+  getAdvancedDetailsOnStock:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/api/yahoo/getStockData/handler.getStockData
+      Description: Queries multiple stocks at once for side-by-side comparison
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: !Sub ${BASE_URL}/stock/search
+            Method: GET

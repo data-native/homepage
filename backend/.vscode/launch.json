@@ -1,0 +1,35 @@
+{
+    "configurations": [
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "yahoo-finance:getStockMetrics",
+            "invokeTarget": {
+                "target": "template",
+                "templatePath": "${workspaceFolder}/src/handlers/api/yahoo-finance/yahoo_template.yaml",
+                "logicalId": "getStockMetrics"
+            },
+            "lambda": {
+                "payload": {},
+                "environmentVariables": {}
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
+            "name": "API finnhub:getCompanyNews",
+            "invokeTarget": {
+                "target": "api",
+                "templatePath": "${workspaceFolder}/src/handlers/api/finnhub/finnhub_template.yaml",
+                "logicalId": "getCompanyNews"
+            },
+            "api": {
+                "path": "/",
+                "httpMethod": "get",
+                "payload": {
+                    "json": {}
+                }
+            }
+        }
+    ]
+}

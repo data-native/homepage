@@ -20,11 +20,14 @@ Globals:
   Api:
     TracingEnabled: True
 
-Resources:
-  # Each Lambda function is defined by properties:
-  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+Mappings:
+  # Define the base url endpoint per API integration target 
+  APIIntegrationBaseUrl:
+    finnhub: '/finnhub'
+    yahoo: '/yahoo'
 
-# This is a Lambda function config associated with the source code: get-all-items.js
+
+Resources:
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -36,6 +39,17 @@ Resources:
         MaxAge: "'600'"
 
 # Handling options preflight for CORS
+  FinnhubRestIntegration:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./src/handlers/api/finnhub/finnhub_template.yaml
+
+
+
+  YahooFinanceRestIntegration:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: ./src/handlers/api/yahoo-finance/yahoo_template.yaml
 # Retrieves all articles
   getAllArticlesFunction:
     Type: AWS::Serverless::Function
@@ -205,6 +219,8 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
             Path: /video
             Method: POST
+  
+  # API - Finnhub backend
   # Simple s
   # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
   Content:
